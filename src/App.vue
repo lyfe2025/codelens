@@ -5,7 +5,7 @@
         <div class="app" :class="{ dark: isDark }">
           <header class="header">
             <router-link to="/" class="logo">
-              <n-icon :component="SchoolOutline" size="24" />
+              <CodeLensLogo :size="28" />
               <span>CodeLens</span>
             </router-link>
             <nav class="nav">
@@ -68,7 +68,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { NConfigProvider, NMessageProvider, NDialogProvider, NButton, NTooltip, NTag, NIcon } from 'naive-ui'
-import { SearchOutline, SettingsOutline, SunnyOutline, MoonOutline, SchoolOutline } from '@vicons/ionicons5'
+import { SearchOutline, SettingsOutline, SunnyOutline, MoonOutline } from '@vicons/ionicons5'
+import CodeLensLogo from './components/CodeLensLogo.vue'
 import QuickSearch from './components/QuickSearch.vue'
 import NotesSidebar from './components/NotesSidebar.vue'
 import AchievementToast from './components/AchievementToast.vue'
