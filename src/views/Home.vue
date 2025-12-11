@@ -169,7 +169,7 @@
     <template v-else>
       <div class="lessons-view">
         <div class="lessons-header">
-          <n-button text @click="currentModule = null" class="back-btn">
+          <n-button quaternary size="small" @click="currentModule = null" class="back-btn">
             <template #icon><n-icon :component="ArrowBackOutline" /></template>
             返回
           </n-button>

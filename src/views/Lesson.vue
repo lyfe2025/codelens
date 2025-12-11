@@ -16,7 +16,7 @@
 
     <!-- 侧边栏 -->
     <aside class="sidebar" :class="{ hidden: isMobile && mobileView !== 'theory' }">
-      <n-button text @click="$router.push(`/?module=${module}`)" class="back-link">
+      <n-button quaternary size="small" @click="$router.push(`/?module=${module}`)" class="back-link">
         <template #icon><n-icon :component="ArrowBackOutline" /></template>
         返回目录
       </n-button>
