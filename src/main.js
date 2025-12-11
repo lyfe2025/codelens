@@ -1,3 +1,16 @@
+// 在沙盒环境中静默处理 cookie 错误
+try {
+  const cookieDesc = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie')
+  if (cookieDesc) {
+    Object.defineProperty(Document.prototype, 'cookie', {
+      get: cookieDesc.get,
+      set(v) {
+        try { cookieDesc.set.call(this, v) } catch {}
+      }
+    })
+  }
+} catch {}
+
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import App from './App.vue'

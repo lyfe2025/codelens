@@ -128,6 +128,12 @@ export function useCodeEditor(options = {}) {
     saveTimeout = setTimeout(() => saveCode(module, lessonId), delay)
   }
 
+  // 格式化代码
+  const formatCode = async () => {
+    if (!editor) return
+    await editor.getAction('editor.action.formatDocument')?.run()
+  }
+
   return {
     editorContainer,
     activeTab,
@@ -146,6 +152,7 @@ export function useCodeEditor(options = {}) {
     loadSavedCode,
     clearSavedCode,
     autoSave,
+    formatCode,
     getStorageKey
   }
 }

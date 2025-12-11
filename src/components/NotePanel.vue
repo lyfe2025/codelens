@@ -1,33 +1,33 @@
 <template>
-  <n-collapse :default-expanded-names="[]">
-    <n-collapse-item name="note">
-      <template #header>
-        <n-space align="center" :size="8">
-          <n-icon :component="CreateOutline" />
-          <span>我的笔记</span>
-        </n-space>
-      </template>
-      <n-input
-        v-model:value="noteContent"
-        type="textarea"
-        placeholder="在这里记录学习心得..."
-        :autosize="{ minRows: 4, maxRows: 8 }"
-        @input="saveNote"
-      />
-      <n-space justify="space-between" align="center" class="note-footer">
-        <n-tag size="small" :bordered="false">{{ noteContent.length }} 字</n-tag>
+  <n-card class="note-card" :bordered="true">
+    <template #header>
+      <n-space align="center" :size="8">
+        <n-icon :component="CreateOutline" color="#f59e0b" />
+        <span>我的笔记</span>
+      </n-space>
+    </template>
+    <template #header-extra>
+      <n-space :size="8">
         <n-tag v-if="saved" size="small" type="success" :bordered="false">
           <template #icon><n-icon :component="CheckmarkOutline" /></template>
           已保存
         </n-tag>
+        <n-tag size="small" :bordered="false">{{ noteContent.length }} 字</n-tag>
       </n-space>
-    </n-collapse-item>
-  </n-collapse>
+    </template>
+    <n-input
+      v-model:value="noteContent"
+      type="textarea"
+      placeholder="在这里记录学习心得、疑问、灵感..."
+      :autosize="{ minRows: 3, maxRows: 6 }"
+      @input="saveNote"
+    />
+  </n-card>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { NCollapse, NCollapseItem, NInput, NSpace, NTag, NIcon } from 'naive-ui'
+import { NCard, NInput, NSpace, NTag, NIcon } from 'naive-ui'
 import { CreateOutline, CheckmarkOutline } from '@vicons/ionicons5'
 import { useAchievements } from '../composables/useAchievements'
 
@@ -62,5 +62,15 @@ onMounted(() => loadNote())
 </script>
 
 <style scoped>
-.note-footer { margin-top: 0.5rem; }
+.note-card {
+  margin: 1rem 0;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.note-card :deep(.n-card-header) {
+  padding-bottom: 0.5rem;
+}
+.note-card :deep(.n-input) {
+  background: var(--bg-primary);
+}
 </style>

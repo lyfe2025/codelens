@@ -65,8 +65,6 @@
         分享代码
       </n-button>
 
-      <NotePanel :lessonKey="`${module}-${lessonId}`" />
-
       <n-alert v-if="checkResult" :type="checkResult.success ? 'success' : 'error'" class="result-alert">
         <template #icon>
           <n-icon :component="checkResult.success ? CheckmarkCircleOutline : CloseCircleOutline" />
@@ -74,21 +72,23 @@
         {{ checkResult.success ? '正确！做得好！' : (checkResult.message || '还不对，再试试') }}
       </n-alert>
 
-      <n-space class="nav-btns">
+      <div class="nav-btns">
         <n-button v-if="prevLesson" @click="$router.push(prevLesson)">
           <template #icon><n-icon :component="ChevronBackOutline" /></template>
           上一课
         </n-button>
-        <n-button v-if="nextLesson" type="primary" @click="$router.push(nextLesson)">
-          下一课
+        <span v-else></span>
+        <n-button v-if="nextLesson" type="primary" icon-placement="right" @click="$router.push(nextLesson)">
           <template #icon><n-icon :component="ChevronForwardOutline" /></template>
+          下一课
         </n-button>
-      </n-space>
+      </div>
 
       <n-space class="shortcuts-hint" v-if="!isMobile">
         <n-tag size="tiny" :bordered="false">⌘+Enter 运行</n-tag>
         <n-tag size="tiny" :bordered="false">⌘+S 保存</n-tag>
         <n-tag size="tiny" :bordered="false">⌘+R 重置</n-tag>
+        <n-tag size="tiny" :bordered="false">⇧+⌥+F 格式化</n-tag>
       </n-space>
     </aside>
 
@@ -104,10 +104,16 @@
         >
           {{ tab.toUpperCase() }}
         </n-button>
-        <n-tag v-if="autoSaved" size="small" type="success" class="auto-save">
-          <template #icon><n-icon :component="CheckmarkOutline" /></template>
-          已保存
-        </n-tag>
+        <div class="tabs-right">
+          <n-button size="small" secondary type="info" @click="handleFormat" title="Shift+Alt+F">
+            <template #icon><n-icon :component="CodeOutline" /></template>
+            格式化
+          </n-button>
+          <n-tag v-if="autoSaved" size="small" type="success">
+            <template #icon><n-icon :component="CheckmarkOutline" /></template>
+            已保存
+          </n-tag>
+        </div>
       </div>
       <div class="code-editor" ref="editorContainer"></div>
     </div>
@@ -121,7 +127,7 @@
           Console ({{ consoleLogs.length }})
         </n-button>
       </div>
-      <iframe ref="previewFrame" sandbox="allow-scripts allow-modals"></iframe>
+      <iframe ref="previewFrame" sandbox="allow-scripts allow-modals allow-same-origin"></iframe>
       <ConsolePanel :logs="consoleLogs" :show="showConsole" @clear="clearConsole" />
     </div>
 
@@ -137,7 +143,7 @@ import { NButton, NCard, NSpace, NTag, NAlert, NIcon } from 'naive-ui'
 import { 
   ArrowBackOutline, PlayOutline, RefreshOutline, CheckmarkOutline, CheckmarkCircleOutline,
   CloseCircleOutline, ChevronBackOutline, ChevronForwardOutline, ShareSocialOutline,
-  GitCompareOutline, TerminalOutline, CreateOutline, BookOutline, CodeSlashOutline, EyeOutline
+  GitCompareOutline, TerminalOutline, CreateOutline, BookOutline, CodeSlashOutline, EyeOutline, CodeOutline
 } from '@vicons/ionicons5'
 import { lessons } from '../data/lessons/index'
 import { useCodeEditor } from '../composables/useCodeEditor'
@@ -151,7 +157,6 @@ import ConsolePanel from '../components/ConsolePanel.vue'
 import HintPanel from '../components/HintPanel.vue'
 import SolutionPanel from '../components/SolutionPanel.vue'
 import CodeDiffModal from '../components/CodeDiffModal.vue'
-import NotePanel from '../components/NotePanel.vue'
 import ChallengeTimer from '../components/ChallengeTimer.vue'
 import ShareModal from '../components/ShareModal.vue'
 import { useAchievements } from '../composables/useAchievements'
@@ -181,7 +186,7 @@ const availableTabs = computed(() => {
   return tabs
 })
 
-const { editorContainer, activeTab, code, autoSaved, initEditor, onContentChange, addCommand, getMonaco, switchTab, setCode, dispose, loadSavedCode, clearSavedCode, autoSave } = useCodeEditor()
+const { editorContainer, activeTab, code, autoSaved, initEditor, onContentChange, addCommand, getMonaco, switchTab, setCode, dispose, loadSavedCode, clearSavedCode, autoSave, formatCode } = useCodeEditor()
 const { consoleLogs, showConsole, clearConsole, getConsoleInterceptScript, startListening, stopListening } = useConsole()
 const { checkResult, showSolution, currentHintIndex, resetCheckState, showNextHint, toggleSolution, checkAnswer } = useLessonCheck()
 const { isMobile, mobileView, setMobileView } = useResponsive()
@@ -191,6 +196,10 @@ const { incrementRunCount, checkStudyTime } = useAchievements()
 
 const showShareModal = ref(false)
 const isChallenge = computed(() => lesson.value?.type === 'challenge')
+
+const handleFormat = () => {
+  formatCode()
+}
 
 const handleRun = () => {
   clearConsole()
@@ -247,6 +256,7 @@ onMounted(async () => {
   if (monaco) {
     addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.Enter, handleRun)
     addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => { autoSave(module.value, lessonId.value); handleRun() })
+    addCommand(monaco.KeyMod.Shift | monaco.KeyMod.Alt | monaco.KeyCode.KeyF, handleFormat)
   }
   loadLesson()
 })
@@ -283,11 +293,12 @@ onUnmounted(() => {
 .actions { margin: 1rem 0; }
 .action-btn { margin-bottom: 0.75rem; }
 .result-alert { margin: 1rem 0; }
-.nav-btns { margin-top: 1.5rem; }
+.nav-btns { margin-top: 1.5rem; display: flex; justify-content: space-between; }
 .shortcuts-hint { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); }
 .editor-area { display: flex; flex-direction: column; background: #1e1e1e; }
 .tabs { display: flex; background: #252526; padding: 0.5rem; gap: 0.25rem; align-items: center; }
-.auto-save { margin-left: auto; }
+.tabs :deep(.n-button:not(.n-button--primary-type)) { color: #ccc; }
+.tabs-right { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
 .code-editor { flex: 1; }
 .preview-area { display: flex; flex-direction: column; background: var(--bg-secondary); }
 .preview-header { padding: 0.75rem 1rem; background: var(--bg-tertiary); border-bottom: 1px solid var(--border-color); font-weight: 500; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center; }
