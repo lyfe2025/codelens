@@ -1,8 +1,8 @@
 # CodeLens
 
-看懂代码，驾驭 AI —— AI 时代的编程基础课。
+AI 写代码，你来掌控 —— 核心模块不能只靠 AI，逐行理解代码逻辑，关键时刻自己能改。
 
-通过逐行代码解析，帮助你理解每一行代码的含义，让 AI 生成的代码不再是黑盒。
+🔗 **在线体验**: [https://lyfe2025.github.io/codelens/](https://lyfe2025.github.io/codelens/)
 
 ## ✨ 特性
 
@@ -33,8 +33,8 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/lyfe2025/learn-frontend.git
-cd learn-frontend
+git clone https://github.com/lyfe2025/codelens.git
+cd codelens
 
 # 安装依赖
 npm install
@@ -70,20 +70,16 @@ src/
 └── views/           # 页面视图
 ```
 
-## 🎨 主题定制
+## 🚀 部署到 GitHub Pages
 
-支持 8 种预设主题色：
-- 清新蓝、薄荷绿、活力橙、靛蓝
-- 樱花粉、天青、深空灰、经典紫
+项目已配置 GitHub Actions 自动部署，推送到 `main` 分支后会自动构建并发布到 GitHub Pages。
 
-也可以通过颜色选择器自定义任意颜色。
+手动部署：
 
-## 📦 数据管理
-
-- **自动保存**: 学习进度、笔记自动保存到本地
-- **导出 JSON**: 备份所有学习数据
-- **导出 Markdown**: 生成学习报告
-- **导入数据**: 恢复之前的学习记录
+```bash
+npm run build
+# 将 dist 目录内容推送到 gh-pages 分支
+```
 
 ## 🤝 贡献
 

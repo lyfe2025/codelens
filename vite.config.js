@@ -4,7 +4,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   // GitHub Pages 部署配置
-  base: process.env.GITHUB_ACTIONS ? '/learn-frontend/' : '/',
+  base: process.env.GITHUB_ACTIONS ? '/codelens/' : '/',
   
   build: {
     rollupOptions: {

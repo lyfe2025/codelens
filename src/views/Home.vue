@@ -6,7 +6,7 @@
       <div class="welcome-section">
         <div class="welcome-content">
           <div class="welcome-text">
-            <h1>AI 写代码，你来掌控</h1>
+            <h1>看懂代码，驾驭 AI</h1>
             <p>核心模块不能只靠 AI，逐行理解代码逻辑，关键时刻自己能改</p>
             <n-button size="large" class="start-btn" @click="scrollToModules">
               <template #icon><n-icon :component="PlayOutline" /></template>
